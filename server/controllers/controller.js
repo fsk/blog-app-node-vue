@@ -1,5 +1,11 @@
 import Post from "../models/PostShema.js";
 import PostSchema from "../models/PostShema.js";
+//import download from "download";
+
+import fs from "fs";
+import fastcsv from "fast-csv";
+
+const ws = fs.createWriteStream("bezkoder_mongodb_fastcsv.csv");
 
 const postList = async (req, res) => {
   try {
@@ -63,10 +69,36 @@ const updatePostById = async (req, res) => {
   }
 };
 
+const getTxtFile = async (req, res) => {
+  
+    const allPosts = await PostSchema.find({});
+    // console.log(allPosts);
+    // console.log(typeof allPosts);
+    const json = JSON.stringify(allPosts);
+    const buffer = Buffer.from(json);
+    console.log(typeof buffer);
+
+    // fs.writeFile('helloworld.txt', allPosts, function (err) {
+    //   if (err) return console.log(err);
+    //   console.log('Hello World > helloworld.txt');
+    // });
+
+    
+
+    fs.writeFile('logs.txt', buffer, err => {
+      if (err) throw err;
+
+      console.log("Logs saved.!");
+      //file written successfully
+    })
+
+};
+
 export default {
   postList,
   createPost,
   getPostById,
   deletePostById,
   updatePostById,
+  getTxtFile,
 };
